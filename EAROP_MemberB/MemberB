@@ -1,24 +1,44 @@
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class EmergencyAmbulanceOptimization {
 
+    // ============================================
+    // Insertion Sort
+    // ============================================
     public static String insertionSort(int[] arr) {
+
+        if (arr == null || arr.length == 0) {
+            return "Invalid: array is empty";
+        }
+
         for (int i = 1; i < arr.length; i++) {
+
             int key = arr[i];
             int j = i - 1;
+
             while (j >= 0 && arr[j] > key) {
                 arr[j + 1] = arr[j];
                 j--;
             }
+
             arr[j + 1] = key;
         }
+
         return Arrays.toString(arr);
     }
 
+    // ============================================
+    // Binary Search
+    // ============================================
     public static String binarySearch(int[] arr, int target) {
+
+        // Data validation
         if (arr == null || arr.length == 0) {
             return "Invalid: array is empty";
         }
+
+        // Binary Search requires a sorted array
         for (int i = 1; i < arr.length; i++) {
             if (arr[i - 1] > arr[i]) {
                 return "Invalid: array must be sorted";
@@ -29,6 +49,7 @@ public class EmergencyAmbulanceOptimization {
         int high = arr.length - 1;
 
         while (low <= high) {
+
             int mid = low + (high - low) / 2;
 
             if (arr[mid] == target) {
@@ -39,265 +60,414 @@ public class EmergencyAmbulanceOptimization {
                 high = mid - 1;
             }
         }
+
         return "Not found";
     }
 
-    public static void main(String[] args) {
-        int[] arr = {8, 3, 5, 1, 9, 2};
-        insertionSort(arr);
-        System.out.println("Sorted Array: " + Arrays.toString(arr));
-
-        System.out.println("Binary Search (Response Time 5 found at index): "
-                + binarySearch(arr, 5));
-        System.out.println("Binary Search (Response Time 7 found at index): "
-                + binarySearch(arr, 7));
-    }
-}
-
-import java.util.ArrayList;
-
-public class MarketingOptimizationApp {
-
+    // ============================================
+    // Min-Heap
+    // ============================================
     static class MinHeap {
+
         private ArrayList<Integer> heap;
 
         public MinHeap() {
             heap = new ArrayList<>();
         }
 
-        private int getParentIndex(int i) { return (i - 1) / 2; }
-        private int getLeftChildIndex(int i) { return (2 * i) + 1; }
-        private int getRightChildIndex(int i) { return (2 * i) + 2; }
+        // --------------------------------------------
+        // Get Parent Index
+        // --------------------------------------------
+        private int getParentIndex(int i) {
+            return (i - 1) / 2;
+        }
 
+        // --------------------------------------------
+        // Get Left Child Index
+        // --------------------------------------------
+        private int getLeftChildIndex(int i) {
+            return (2 * i) + 1;
+        }
+
+        // --------------------------------------------
+        // Get Right Child Index
+        // --------------------------------------------
+        private int getRightChildIndex(int i) {
+            return (2 * i) + 2;
+        }
+
+        // --------------------------------------------
+        // Swap Two Elements
+        // --------------------------------------------
         private void swap(int index1, int index2) {
+
             int temp = heap.get(index1);
+
             heap.set(index1, heap.get(index2));
             heap.set(index2, temp);
         }
 
+        // --------------------------------------------
+        // Insert
+        // --------------------------------------------
         public void insert(int element) {
+
             heap.add(element);
+
             heapifyUp(heap.size() - 1);
         }
 
+        // --------------------------------------------
+        // Heapify Up
+        // --------------------------------------------
         private void heapifyUp(int index) {
-            while (index > 0 && heap.get(index) < heap.get(getParentIndex(index))) {
-                swap(index, getParentIndex(index));
-                index = getParentIndex(index);
+
+            while (index > 0
+                    && heap.get(index)
+                    < heap.get(getParentIndex(index))) {
+
+                int parentIndex = getParentIndex(index);
+
+                swap(index, parentIndex);
+
+                index = parentIndex;
             }
         }
 
+        // --------------------------------------------
+        // Extract Minimum
+        // --------------------------------------------
         public int extractMin() {
+
             if (heap.isEmpty()) {
                 System.out.println("Heap is empty!");
                 return -1;
             }
 
-            int minVal = heap.get(0);
-            int lastVal = heap.remove(heap.size() - 1);
+            int minValue = heap.get(0);
+
+            int lastValue = heap.remove(heap.size() - 1);
 
             if (!heap.isEmpty()) {
-                heap.set(0, lastVal);
+
+                heap.set(0, lastValue);
+
                 heapifyDown(0);
             }
-            return minVal;
+
+            return minValue;
         }
 
+        // --------------------------------------------
+        // Heapify Down
+        // --------------------------------------------
         private void heapifyDown(int index) {
+
             int smallest = index;
+
             int left = getLeftChildIndex(index);
             int right = getRightChildIndex(index);
 
-            if (left < heap.size() && heap.get(left) < heap.get(smallest)) {
+            if (left < heap.size()
+                    && heap.get(left) < heap.get(smallest)) {
+
                 smallest = left;
             }
-            if (right < heap.size() && heap.get(right) < heap.get(smallest)) {
+
+            if (right < heap.size()
+                    && heap.get(right) < heap.get(smallest)) {
+
                 smallest = right;
             }
 
             if (smallest != index) {
+
                 swap(index, smallest);
+
                 heapifyDown(smallest);
             }
         }
 
+        // --------------------------------------------
+        // Display Heap
+        // --------------------------------------------
         public void printHeap() {
-            System.out.println(heap.toString());
+
+            System.out.println(heap);
         }
     }
 
+    // ============================================
+    // Splay Tree
+    // ============================================
     static class SplayTree {
+
+        // --------------------------------------------
+        // Node
+        // --------------------------------------------
         static class Node {
+
             int key;
-            Node left, right;
+            Node left;
+            Node right;
 
             Node(int key) {
+
                 this.key = key;
-                this.left = this.right = null;
+                this.left = null;
+                this.right = null;
             }
         }
 
         private Node root;
 
+        // --------------------------------------------
+        // Right Rotation
+        // --------------------------------------------
         private Node rightRotate(Node x) {
+
             Node y = x.left;
+
             x.left = y.right;
             y.right = x;
+
             return y;
         }
 
+        // --------------------------------------------
+        // Left Rotation
+        // --------------------------------------------
         private Node leftRotate(Node x) {
+
             Node y = x.right;
+
             x.right = y.left;
             y.left = x;
+
             return y;
         }
 
+        // --------------------------------------------
+        // Splay Operation
+        // --------------------------------------------
         private Node splay(Node root, int key) {
-            if (root == null || root.key == key) return root;
 
+            if (root == null || root.key == key) {
+                return root;
+            }
+
+            // Key is in the left subtree
             if (root.key > key) {
-                if (root.left == null) return root;
 
+                if (root.left == null) {
+                    return root;
+                }
+
+                // Zig-Zig
                 if (root.left.key > key) {
-                    root.left.left = splay(root.left.left, key);
+
+                    root.left.left =
+                            splay(root.left.left, key);
+
                     root = rightRotate(root);
                 }
-                else if (root.left.key < key) {
-                    root.left.right = splay(root.left.right, key);
-                    if (root.left.right != null) {
-                        root.left = leftRotate(root.left);
-                    }
-                }
-                return (root.left == null) ? root : rightRotate(root);
-            } 
-            else {
-                if (root.right == null) return root;
 
-                if (root.right.key > key) {
-                    root.right.left = splay(root.right.left, key);
-                    if (root.right.left != null) {
-                        root.right = rightRotate(root.right);
+                // Zig-Zag
+                else if (root.left.key < key) {
+
+                    root.left.right =
+                            splay(root.left.right, key);
+
+                    if (root.left.right != null) {
+                        root.left =
+                                leftRotate(root.left);
                     }
                 }
+
+                return (root.left == null)
+                        ? root
+                        : rightRotate(root);
+            }
+
+            // Key is in the right subtree
+            else {
+
+                if (root.right == null) {
+                    return root;
+                }
+
+                // Zag-Zig
+                if (root.right.key > key) {
+
+                    root.right.left =
+                            splay(root.right.left, key);
+
+                    if (root.right.left != null) {
+                        root.right =
+                                rightRotate(root.right);
+                    }
+                }
+
+                // Zag-Zag
                 else if (root.right.key < key) {
-                    root.right.right = splay(root.right.right, key);
+
+                    root.right.right =
+                            splay(root.right.right, key);
+
                     root = leftRotate(root);
                 }
-                return (root.right == null) ? root : leftRotate(root);
+
+                return (root.right == null)
+                        ? root
+                        : leftRotate(root);
             }
         }
 
+        // --------------------------------------------
+        // Search
+        // --------------------------------------------
         public boolean search(int key) {
+
             root = splay(root, key);
-            return (root != null && root.key == key);
+
+            return root != null && root.key == key;
         }
 
+        // --------------------------------------------
+        // Insert
+        // --------------------------------------------
         public void insert(int key) {
+
             if (root == null) {
+
                 root = new Node(key);
+
                 return;
             }
+
             root = splay(root, key);
-            if (root.key == key) return; 
+
+            // Avoid duplicate values
+            if (root.key == key) {
+                return;
+            }
 
             Node newNode = new Node(key);
+
             if (root.key > key) {
+
                 newNode.right = root;
                 newNode.left = root.left;
+
                 root.left = null;
+
             } else {
+
                 newNode.left = root;
                 newNode.right = root.right;
+
                 root.right = null;
             }
+
             root = newNode;
         }
 
+        // --------------------------------------------
+        // Display Current Root
+        // --------------------------------------------
         public void printRoot() {
+
             if (root != null) {
-                System.out.println("Current Splay Tree Root node is: " + root.key);
+
+                System.out.println(
+                        "Current Splay Tree Root Node: "
+                        + root.key
+                );
+
             } else {
+
                 System.out.println("Tree is empty");
             }
         }
     }
 
+    // ============================================
+    // Main Method
+    // ============================================
     public static void main(String[] args) {
+
+        // ============================================
+        // Insertion Sort & Binary Search
+        // ============================================
+        System.out.println("===== SORTING & SEARCHING =====");
+
+        int[] arr = {8, 3, 5, 1, 9, 2};
+
+        insertionSort(arr);
+
+        System.out.println(
+                "Sorted Emergency Response Times: "
+                + Arrays.toString(arr)
+        );
+
+        System.out.println(
+                "Binary Search (Response Time 5 found at index): "
+                + binarySearch(arr, 5)
+        );
+
+        System.out.println(
+                "Binary Search (Response Time 7 found at index): "
+                + binarySearch(arr, 7)
+        );
+
+        // ============================================
+        // Min-Heap
+        // ============================================
+        System.out.println();
+        System.out.println("===== MIN-HEAP =====");
+
         MinHeap heap = new MinHeap();
+
         heap.insert(10);
         heap.insert(3);
         heap.insert(15);
-        
-        System.out.print("Current Min-Heap structure elements: ");
-        heap.printHeap();
-        System.out.println("Min-Heap Extract Min: " + heap.extractMin());
-        System.out.print("Min-Heap structure after extraction: ");
+
+        System.out.print(
+                "Current Min-Heap Structure: "
+        );
+
         heap.printHeap();
 
+        System.out.println(
+                "Min-Heap Extract Minimum: "
+                + heap.extractMin()
+        );
+
+        System.out.print(
+                "Min-Heap Structure After Extraction: "
+        );
+
+        heap.printHeap();
+
+        // ============================================
+        // Splay Tree
+        // ============================================
         System.out.println();
+        System.out.println("===== SPLAY TREE =====");
 
         SplayTree tree = new SplayTree();
+
         tree.insert(20);
         tree.insert(10);
         tree.insert(30);
-        
+
         tree.printRoot();
-        System.out.println("Splay Tree Search (10 found): " + tree.search(10));
+
+        System.out.println(
+                "Splay Tree Search (10 found): "
+                + tree.search(10)
+        );
+
         tree.printRoot();
-    }
-}
-
-import java.util.*;
-
-public class HeapDemo {
-
-    static class MinHeap {
-        private ArrayList<Integer> heap = new ArrayList<>();
-
-        private void swap(int i, int j) {
-            int t = heap.get(i);
-            heap.set(i, heap.get(j));
-            heap.set(j, t);
-        }
-
-        public void insert(int element) {
-            heap.add(element);
-            int i = heap.size() - 1;
-            while (i > 0 && heap.get(i) < heap.get((i - 1) / 2)) {
-                swap(i, (i - 1) / 2);
-                i = (i - 1) / 2;
-            }
-        }
-
-        public int extractMin() {
-            if (heap.isEmpty()) return -1;
-            int minVal = heap.get(0);
-            int lastVal = heap.remove(heap.size() - 1);
-            if (!heap.isEmpty()) {
-                heap.set(0, lastVal);
-                heapifyDown(0);
-            }
-            return minVal;
-        }
-
-        private void heapifyDown(int i) {
-            int smallest = i, l = 2 * i + 1, r = 2 * i + 2;
-            if (l < heap.size() && heap.get(l) < heap.get(smallest)) smallest = l;
-            if (r < heap.size() && heap.get(r) < heap.get(smallest)) smallest = r;
-            if (smallest != i) {
-                swap(i, smallest);
-                heapifyDown(smallest);
-            }
-        }
-    }
-
-    public static void main(String[] args) {
-        MinHeap heap = new MinHeap();
-        heap.insert(19);
-        heap.insert(46);
-        heap.insert(11);
-
-        System.out.println("Min-Heap Extract Min: " + heap.extractMin());
     }
 }
